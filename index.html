@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>NOVA</title>
+<meta name="description" content="NOVA — cockpit personnel : priorités, business, watch lab, argent, second cerveau.">
+<meta name="theme-color" content="#05101F">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NOVA">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===== Lock screen ===== -->
+  <div class="lock-screen" id="lockScreen" hidden>
+    <div class="lock-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    </div>
+    <div>
+      <h2 class="display">NOVA est verrouillé</h2>
+      <p class="section-sub" id="lockSub">Authentifie-toi pour continuer</p>
+    </div>
+    <div class="pin-dots" id="pinDots" hidden>
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <div class="keypad" id="pinKeypad" hidden></div>
+    <button class="btn" id="btnBioUnlock" style="max-width:220px">Déverrouiller</button>
+  </div>
+
+  <!-- ===== Status bar ===== -->
+  <header class="status-bar">
+    <div class="row-top">
+      <div class="brand">
+        <div class="brand-mark">N</div>
+        <div class="brand-name">NOVA</div>
+      </div>
+      <button class="icon-btn" id="btnSettings" aria-label="Réglages">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+    <div class="next-action-label">PRIORITÉ DU MOMENT</div>
+    <div class="next-action" id="nextAction">Chargement…</div>
+  </header>
+
+  <main id="main">
+
+    <!-- ===== RADAR (missions) ===== -->
+    <section class="screen" id="screen-radar">
+      <div class="stat-row">
+        <div class="stat"><div class="num" id="radarOpen">0</div><div class="label">en cours</div></div>
+        <div class="stat good"><div class="num" id="radarDone">0</div><div class="label">terminées</div></div>
+      </div>
+      <div class="card" id="radarList"></div>
+      <button class="btn" data-add="mission">+ Nouvelle mission</button>
+    </section>
+
+    <!-- ===== BUSINESS (deals) ===== -->
+    <section class="screen" id="screen-business" hidden>
+      <div class="stat-row">
+        <div class="stat"><div class="num" id="bizCount">0</div><div class="label">opportunités</div></div>
+        <div class="stat good"><div class="num" id="bizValue">0 €</div><div class="label">valeur pondérée</div></div>
+      </div>
+      <div class="card" id="bizList"></div>
+      <button class="btn" data-add="deal">+ Nouvelle opportunité</button>
+    </section>
+
+    <!-- ===== WATCH LAB ===== -->
+    <section class="screen" id="screen-watch" hidden>
+      <div class="card" id="watchList"></div>
+      <button class="btn" data-add="watch">+ Nouveau concept</button>
+    </section>
+
+    <!-- ===== MONEY ===== -->
+    <section class="screen" id="screen-money" hidden>
+      <div class="stat-row">
+        <div class="stat" id="moneyBalanceCard"><div class="num" id="moneyBalance">0 €</div><div class="label">solde</div></div>
+        <div class="stat good"><div class="num" id="moneyIn">0 €</div><div class="label">entrées</div></div>
+        <div class="stat bad"><div class="num" id="moneyOut">0 €</div><div class="label">sorties</div></div>
+      </div>
+      <div class="card" id="moneyList"></div>
+      <button class="btn" data-add="cash">+ Mouvement</button>
+    </section>
+
+    <!-- ===== BRAIN (notes + Alphonse) ===== -->
+    <section class="screen" id="screen-brain" hidden>
+      <div class="section-title">Second Brain</div>
+      <div class="section-sub" id="brainSub">Alphonse garde le fil de vos échanges.</div>
+      <div id="chatLog"></div>
+      <div id="thinkingRow" class="thinking" hidden>
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span> Alphonse réfléchit…
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Demande à Alphonse">
+        <button class="btn small" id="btnSend">Envoyer</button>
+      </div>
+      <hr class="sep">
+      <div class="field">
+        <label for="noteInput">Idée, décision, note</label>
+        <textarea id="noteInput" placeholder="Écris quelque chose à garder…"></textarea>
+      </div>
+      <button class="btn ghost" id="btnSaveNote">Enregistrer dans le cerveau</button>
+      <div id="noteList"></div>
+    </section>
+
+    <!-- ===== SETTINGS ===== -->
+    <section class="screen" id="screen-settings" hidden>
+      <div class="section-title">Réglages</div>
+
+      <div class="card">
+        <div class="setting-row">
+          <div class="txt"><div class="t">Mode sombre</div></div>
+          <label class="switch"><input type="checkbox" id="toggleDark"><span class="track"></span></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="setting-row">
+          <div class="txt"><div class="t">Verrouiller l'accès</div><div class="d" id="lockDesc">Empreinte / Face ID si dispo, sinon code</div></div>
+          <label class="switch"><input type="checkbox" id="toggleLock"><span class="track"></span></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="setting-row">
+          <div class="txt"><div class="t">Rappel quotidien</div><div class="d">Notification si l'app est ouverte ce jour-là — pas de fond garanti sans serveur</div></div>
+          <label class="switch"><input type="checkbox" id="toggleReminder"><span class="track"></span></label>
+        </div>
+      </div>
+
+      <div class="card" style="display:flex; flex-direction:column; gap:10px;">
+        <div class="t" style="font-weight:700;">Alphonse — IA distante</div>
+        <div class="d" style="color:var(--text-dim); font-size:12.5px;">Le moteur local répond toujours, même sans réglages ci-dessous. La clé reste uniquement dans ce navigateur.</div>
+        <div class="chip-row" id="aiModeChips">
+          <button class="chip" data-mode="local">LOCAL</button>
+          <button class="chip" data-mode="hybrid">HYBRIDE</button>
+          <button class="chip" data-mode="remote">DISTANT</button>
+        </div>
+        <div class="field"><label>Endpoint (compatible OpenAI)</label><input type="url" id="aiEndpoint" placeholder="https://api.exemple.com/v1/chat/completions"></div>
+        <div class="field"><label>Modèle</label><input type="text" id="aiModel" placeholder="gpt-4o-mini"></div>
+        <div class="field"><label>Clé API</label><input type="password" id="aiKey" placeholder="sk-…"></div>
+        <button class="btn" id="btnSaveAi">Enregistrer</button>
+      </div>
+
+      <div class="card" style="display:flex; flex-direction:column; gap:10px;">
+        <div class="t" style="font-weight:700;">Sauvegarde</div>
+        <div class="d" style="color:var(--text-dim); font-size:12.5px;">Tout vit dans ce navigateur. Exporte régulièrement, surtout avant de changer de téléphone.</div>
+        <div class="fab-row">
+          <button class="btn ghost" id="btnExport">Exporter (.json)</button>
+          <button class="btn ghost" id="btnImport">Importer</button>
+        </div>
+        <input type="file" id="importFile" accept="application/json" hidden>
+        <button class="btn danger" id="btnReset">Réinitialiser tout</button>
+      </div>
+
+      <div class="section-sub" style="text-align:center; padding:8px 0 0;">NOVA · Progressive Web App</div>
+    </section>
+
+  </main>
+
+  <!-- ===== Bottom tabs ===== -->
+  <nav class="tabs">
+    <button class="tab active" data-tab="radar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/></svg>
+      <span>Radar</span>
+    </button>
+    <button class="tab" data-tab="business">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      <span>Business</span>
+    </button>
+    <button class="tab" data-tab="watch">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><path d="M12 9v3l2 2"/><path d="M9 2h6M9 22h6"/></svg>
+      <span>Watch</span>
+    </button>
+    <button class="tab" data-tab="money">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.4 1.3-2.5 3-2.5s3 .8 3 2c0 3-6 1.5-6 4.5 0 1.2 1.3 2 3 2s3-1.1 3-2.5"/></svg>
+      <span>Money</span>
+    </button>
+    <button class="tab" data-tab="brain">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3a3 3 0 0 0-3 3v1a3 3 0 0 0-1.5 5.6A3 3 0 0 0 6 18a3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3z"/><path d="M15 3a3 3 0 0 1 3 3v1a3 3 0 0 1 1.5 5.6A3 3 0 0 1 18 18a3 3 0 0 1-3 3 3 3 0 0 1-3-3"/></svg>
+      <span>Brain</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- ===== Bottom sheet (add item) ===== -->
+<div class="sheet-backdrop" id="sheetBackdrop" hidden>
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

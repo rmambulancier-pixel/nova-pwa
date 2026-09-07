@@ -1,0 +1,17 @@
+{
+  "name": "NOVA — Cockpit personnel",
+  "short_name": "NOVA",
+  "description": "Priorités, business, watch lab, argent et second cerveau, dans un seul cockpit.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#05101F",
+  "theme_color": "#05101F",
+  "orientation": "portrait",
+  "lang": "fr",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
